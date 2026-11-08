@@ -1,0 +1,37 @@
+name: Hentaigasm
+sceneByFragment:
+  action: scrapeXPath
+  queryURL: https://hentaigasm.com/{filename}
+  queryURLReplace:
+    filename:
+      - regex: ^(.+)\..+$
+        with: $1
+      - regex: ^([^ ]+)([^ ]*)$
+        with: $1-$2
+scraper: sceneScraper
+sceneByURL:
+  - action: scrapeXPath
+    url:
+      - Hentaigasm/
+    scraper: sceneScraper
+xPathScrapers:
+  sceneScraper:
+    scene:
+      Title: //h1[@id="title"]/text()
+      Date:
+        selector: //h4
+        postProcess:
+          - parseDate: January 2, 2006
+      Details:
+        selector: //div[@class="entry-content mt-2"]//p/text()
+        concat: "\n\n"
+      Tags:
+        Name: //div[contains(text(), "Genres")]/following-sibling::*/text()
+      Studio:
+        Name:
+          selector: //h3[@class="mt-0.5"]/a[@class="c-htr info-brand"]/text()
+      Image:
+        selector: //link[@rel="preload" and @fetchpriority="high" and @as="image"]/href
+
+# Last Updated August 4, 2024
+<EOF>
